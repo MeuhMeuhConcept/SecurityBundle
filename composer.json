@@ -14,5 +14,11 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
         "phpunit/phpunit": "^8.5"
+    },
+    "autoload":     {
+        "psr-4": { "Mmc\\Security\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Mmc\\Security\\": "tests/" }
     }
 }
