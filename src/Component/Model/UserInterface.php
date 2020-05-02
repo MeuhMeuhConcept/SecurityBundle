@@ -1,10 +1,12 @@
 <?php
 
-namespace Component\Model;
+namespace Mmc\Security\Component\Model;
 
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 interface UserInterface extends SymfonyUserInterface
 {
-    public function isEnabled (): bool;
+    public function getUuid(): string;
+
+    public function isEnabled(): bool;
 }
