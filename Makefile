@@ -1,3 +1,17 @@
+.PHONY: help unitTest test, cs-check, cs-fix
+bin_dir=vendor/bin
+
+vendor/autoload.php:
+	composer install
+
+cs-check: vendor/autoload.php ## Check PHP CS
+	${bin_dir}/php-cs-fixer --version
+	${bin_dir}/php-cs-fixer fix -v --diff --dry-run
+
+cs-fix: vendor/autoload.php ## Fix PHP CS
+	${bin_dir}/php-cs-fixer --version
+	${bin_dir}/php-cs-fixer fix -v --diff
+
 bash: ## Launch bash in docker container with PHP
 	docker run \
 		--name=security_bundle_console \
