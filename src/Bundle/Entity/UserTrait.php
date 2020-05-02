@@ -11,7 +11,6 @@ trait UserTrait
 
     /**
      * @ORM\Column(type="guid")
-     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $uuid;
 
