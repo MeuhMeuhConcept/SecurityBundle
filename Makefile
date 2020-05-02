@@ -4,6 +4,11 @@ bin_dir=vendor/bin
 vendor/autoload.php:
 	composer install
 
+unitTest: vendor/autoload.php ## Run unit tests
+	${bin_dir}/phpunit
+
+test: unitTest ## Run tests
+
 cs-check: vendor/autoload.php ## Check PHP CS
 	${bin_dir}/php-cs-fixer --version
 	${bin_dir}/php-cs-fixer fix -v --diff --dry-run
