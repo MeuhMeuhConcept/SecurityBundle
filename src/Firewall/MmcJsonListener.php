@@ -87,16 +87,17 @@ class MmcJsonListener extends AbstractListener
                 throw new BadRequestHttpException('Invalid JSON.');
             }
 
-            if (isset($data[$this->options['type_path']])) {
+            /*if (isset($data[$this->options['type_path']])) {
                 $type = $data[$this->options['type_path']];
             } else {
                 throw new BadRequestHttpException(sprintf('The key "%s" must be provided.', $this->options['type_path']), $e);
-            }
+            }*/
+            $type = "username_password";
 
             if (isset($data[$this->options['key_path']])) {
                 $key = $data[$this->options['key_path']];
             } else {
-                throw new BadRequestHttpException(sprintf('The key "%s" must be provided.', $this->options['key_path']), $e);
+                throw new BadRequestHttpException(sprintf('The key "%s" must be provided.', $this->options['key_path']));
             }
 
             if (!\is_string($type)) {

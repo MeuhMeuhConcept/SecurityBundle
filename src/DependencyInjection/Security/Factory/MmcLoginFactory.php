@@ -14,7 +14,7 @@ class MmcLoginFactory extends AbstractFactory
     public function __construct()
     {
         $this->addOption('type_path', 'type');
-        $this->addOption('key_path', 'key');
+        $this->addOption('key_path', 'username');
         $this->defaultFailureHandlerOptions = [];
         $this->defaultSuccessHandlerOptions = [];
     }

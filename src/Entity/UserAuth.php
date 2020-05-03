@@ -25,6 +25,11 @@ class UserAuth
     protected $id;
 
     /**
+     * @ORM\Column(type="guid")
+     */
+    protected $uuid;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="auths")
      */
     protected $user;
@@ -68,6 +73,7 @@ class UserAuth
 
     public function __construct()
     {
+        $this->uuid = uuid_create(UUID_TYPE_RANDOM);
         $this->datas = [];
         $this->isEnabled = true;
         $this->isVerified = false;
@@ -81,6 +87,14 @@ class UserAuth
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 
     /**

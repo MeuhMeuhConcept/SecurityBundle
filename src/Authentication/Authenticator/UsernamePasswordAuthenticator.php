@@ -24,8 +24,7 @@ class UsernamePasswordAuthenticator implements AuthenticatorInterface
 
     public function authenticate(MmcToken $token, User $user): bool
     {
-        $auth = $user->getAuthenticationInformation();
-        if (!$auth || !$auth->getData('password')) {
+        if (!$user || !$user->getData('password')) {
             return false;
         }
 
@@ -37,7 +36,7 @@ class UsernamePasswordAuthenticator implements AuthenticatorInterface
             return false;
         }
 
-        if (!$encoder->isPasswordValid($auth->getData('password'), $password, $auth->getData('salt'))) {
+        if (!$encoder->isPasswordValid($user->getData('password'), $password, $user->getData('salt'))) {
             throw new BadCredentialsException('The presented password is invalid.');
         }
 

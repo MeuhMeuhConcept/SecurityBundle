@@ -25,7 +25,7 @@ class MmcProvider implements AuthenticationProviderInterface
 
     public function authenticate(TokenInterface $token)
     {
-        $user = $this->userProvider->loadUserByUsername($token->getType().':'.$token->getKey());
+        $user = $this->userProvider->loadUserByTypeAndKey($token->getType(), $token->getKey());
 
         if ($user && $this->validate($token, $user)) {
             $authenticatedToken = new MmcToken($token->getType(), $token->getKey(), $token->getProviderKey(), ['IS_AUTHENTICATED_FULLY']);

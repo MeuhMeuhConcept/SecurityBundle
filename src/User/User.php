@@ -8,12 +8,31 @@ class User implements UserInterface
 {
     protected $uuid;
 
-    protected $auth;
+    protected $userUuid;
 
-    public function __construct($uuid, AuthenticationInformation $auth = null)
-    {
+    protected $type;
+
+    protected $key;
+
+    protected $isVerified;
+
+    protected $datas;
+
+
+    public function __construct(
+        $uuid,
+        $userUuid,
+        $type,
+        $key,
+        $isVerified,
+        $datas
+    ) {
         $this->uuid = $uuid;
-        $this->auth = $auth;
+        $this->userUuid = $userUuid;
+        $this->type = $type;
+        $this->key = $key;
+        $this->isVerified = $isVerified;
+        $this->datas = $datas;
     }
 
     public function getRoles()
@@ -38,13 +57,55 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
-        if ($this->auth) {
-            $this->auth->eraseCredentials();
-        }
+        $this->datas = [];
     }
 
-    public function getAuthenticationInformation()
+    /**
+     * @return mixed
+     */
+    public function getUserUuid()
     {
-        return $this->auth;
+        return $this->userUuid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsVerified()
+    {
+        return $this->isVerified;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatas()
+    {
+        return $this->datas;
+    }
+
+    public function getData($key)
+    {
+        if (isset($this->datas[$key])) {
+            return $this->datas[$key];
+        }
+
+        return null;
     }
 }

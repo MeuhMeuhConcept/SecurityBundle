@@ -32,13 +32,21 @@ class Provider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $parts = explode(':', $username);
-        if (2 !== count($parts)) {
-            throw new UsernameNotFoundException();
-        }
+        $qb = $this->em->getRepository(UserAuth::class)->createQueryBuilder('a')
+            ->innerJoin('a.user', 'u')
+            ->andWhere('a.uuid = :uuid')
+            ->setParameter('uuid', $username)
+            ->andWhere('a.isEnabled = true')
+            ->andWhere('u.isEnabled = true')
+            ;
 
-        list($type, $key) = $parts;
+        $entity = $qb->getQuery()->getOneOrNullResult();
 
+        return $this->buildUser($entity);
+    }
+
+    public function loadUserByTypeAndKey($type, $key)
+    {
         $qb = $this->em->getRepository(UserAuth::class)->createQueryBuilder('a')
             ->innerJoin('a.user', 'u')
             ->andWhere('a.type = :type')
@@ -51,21 +59,23 @@ class Provider implements UserProviderInterface
 
         $entity = $qb->getQuery()->getOneOrNullResult();
 
-        if ($entity) {
-            $auth = new AuthenticationInformation(
-                $entity->getType(),
-                $entity->getKey(),
-                $entity->getIsVerified(),
-                $entity->getDatas()
-            );
+        return $this->buildUser($entity);
+    }
 
-            return new User(
-                $entity->getUser()->getUuid(),
-                $auth
-            );
+    protected function buildUser(UserAuth $entity)
+    {
+        if (!$entity) {
+            throw new UsernameNotFoundException();
         }
 
-        throw new UsernameNotFoundException();
+        return new User(
+            $entity->getUuid(),
+            $entity->getUser()->getUuid(),
+            $entity->getType(),
+            $entity->getKey(),
+            $entity->getIsVerified(),
+            $entity->getDatas()
+        );
     }
 
     /**

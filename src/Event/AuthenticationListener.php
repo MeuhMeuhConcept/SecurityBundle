@@ -3,10 +3,13 @@
 namespace Mmc\Security\Event;
 
 use Doctrine\ORM\EntityManager;
+use Mmc\Security\Authentication\Token\MmcToken;
 use Mmc\Security\Entity\Enum\ActivityType;
 use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Entity\UserAuthActivity;
 use Mmc\Security\Entity\UserAuthSession;
+use Mmc\Security\User\User;
+use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class AuthenticationListener
@@ -19,19 +22,19 @@ class AuthenticationListener
         $this->em = $em;
     }
 
-    public function onAuthenticationSuccess(InteractiveLoginEvent $event)
+    public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
 
         $token = $event->getAuthenticationToken();
 
-        if (!$token->getUSer() || !($auth = $token->getUser()->getAuthenticationInformation())) {
+        if (!$token instanceof MmcToken || !$token->getUser()) {
             return;
         }
 
         $authEntity = $this->em->getRepository(UserAuth::class)->findOneBy([
-            'type' => $auth->getType(),
-            'key' => $auth->getKey(),
+            'type' => $token->getUser()->getType(),
+            'key' => $token->getUser()->getKey(),
         ]);
 
         if (!$authEntity) {
