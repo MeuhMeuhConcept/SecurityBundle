@@ -1,0 +1,32 @@
+services:
+    security.authentication.listener.mmc:
+        class: Mmc\Security\Firewall\MmcJsonListener
+        abstract: true
+        arguments:
+            - '@security.token_storage'
+            - '@security.authentication.manager'
+            - '@security.http_utils'
+            - ''
+            - ''
+            - ''
+            - []
+            - '@logger'
+            - '@event_dispatcher'
+        tags:
+            - { name: monolog.logger, channel: security }
+
+    security.authentication.provider.mmc:
+        class: Mmc\Security\Authentication\Provider\MmcProvider
+        arguments:
+            - '' #UserProvider
+            - [] #Authenticators
+
+    security.authentication.provider.mmc.authenticators.username_password:
+        class: Mmc\Security\Authentication\Authenticator\UsernamePasswordAuthenticator
+        arguments:
+            - '@security.encoder_factory'
+
+    security.user.provider.mmc:
+        class: Mmc\Security\User\Provider
+        arguments:
+            - '@doctrine.orm.entity_manager'

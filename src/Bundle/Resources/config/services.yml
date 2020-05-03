@@ -1,5 +1,0 @@
-services:
-    mmc_security.doctrine.listener.user_listener:
-        class: Mmc\Security\Bundle\Doctrine\Listeners\UserListener
-        tags:
-            - { name: doctrine.event_listener, event: prePersist }
