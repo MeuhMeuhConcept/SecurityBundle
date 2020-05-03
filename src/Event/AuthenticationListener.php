@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Mmc\Security\Entity\Enum\ActivityType;
 use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Entity\UserAuthActivity;
+use Mmc\Security\Entity\UserAuthSession;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class AuthenticationListener
@@ -42,11 +43,16 @@ class AuthenticationListener
             ->setType(ActivityType::LOGIN)
             ;
 
+        $session = new UserAuthSession($token->getUuid());
+        $session->setUserAuth($authEntity);
+
         if ($request->headers->has('user-agent')) {
             $activity->setData('user_agent', $request->headers->get('user-agent'));
+            $session->setData('user_agent', $request->headers->get('user-agent'));
         }
 
         $this->em->persist($activity);
+        $this->em->persist($session);
         $this->em->flush();
     }
 }

@@ -61,12 +61,18 @@ class UserAuth
      */
     protected $activities;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserAuthSession", mappedBy="userAuth")
+     */
+    protected $sessions;
+
     public function __construct()
     {
         $this->datas = [];
         $this->isEnabled = true;
         $this->isVerified = false;
         $this->activities = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
 
     /**
@@ -215,5 +221,13 @@ class UserAuth
     public function getActivities()
     {
         return $this->activities;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
     }
 }
