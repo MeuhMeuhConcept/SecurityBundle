@@ -6,7 +6,6 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class MmcToken extends AbstractToken
 {
-    protected $uuid;
     protected $type;
     protected $key;
     protected $providerKey;
@@ -20,21 +19,12 @@ class MmcToken extends AbstractToken
             throw new \InvalidArgumentException('$providerKey must not be empty.');
         }
 
-        $this->uuid = uuid_create(UUID_TYPE_RANDOM);
         $this->type = $type;
         $this->key = $key;
         $this->providerKey = $providerKey;
         $this->extras = [];
 
         $this->setAuthenticated(count($roles) > 0);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
     }
 
     /**

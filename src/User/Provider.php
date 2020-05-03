@@ -4,6 +4,7 @@ namespace Mmc\Security\User;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Mmc\Security\Entity\UserAuth;
+use Mmc\Security\Entity\UserAuthSession;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,9 +33,10 @@ class Provider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $qb = $this->em->getRepository(UserAuth::class)->createQueryBuilder('a')
+        $qb = $this->em->getRepository(UserAuthSession::class)->createQueryBuilder('s')
+            ->innerJoin('s.userAuth', 'a')
             ->innerJoin('a.user', 'u')
-            ->andWhere('a.uuid = :uuid')
+            ->andWhere('s.uuid = :uuid')
             ->setParameter('uuid', $username)
             ->andWhere('a.isEnabled = true')
             ->andWhere('u.isEnabled = true')
@@ -42,7 +44,11 @@ class Provider implements UserProviderInterface
 
         $entity = $qb->getQuery()->getOneOrNullResult();
 
-        return $this->buildUser($entity);
+        if (!$entity) {
+            throw new UsernameNotFoundException();
+        }
+
+        return $this->buildUser($entity->getUserAuth(), $entity->getUuid());
     }
 
     public function loadUserByTypeAndKey($type, $key)
@@ -62,7 +68,7 @@ class Provider implements UserProviderInterface
         return $this->buildUser($entity);
     }
 
-    protected function buildUser(UserAuth $entity)
+    protected function buildUser(UserAuth $entity, $uuid = null)
     {
         if (!$entity) {
             throw new UsernameNotFoundException();
@@ -70,6 +76,7 @@ class Provider implements UserProviderInterface
 
         return new User(
             $entity->getUuid(),
+            $uuid ?: uuid_create(UUID_TYPE_RANDOM),
             $entity->getUser()->getUuid(),
             $entity->getType(),
             $entity->getKey(),

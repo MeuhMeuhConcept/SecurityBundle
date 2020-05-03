@@ -8,6 +8,8 @@ class User implements UserInterface
 {
     protected $uuid;
 
+    protected $sessionUuid;
+
     protected $userUuid;
 
     protected $type;
@@ -21,6 +23,7 @@ class User implements UserInterface
 
     public function __construct(
         $uuid,
+        $sessionUuid,
         $userUuid,
         $type,
         $key,
@@ -28,6 +31,7 @@ class User implements UserInterface
         $datas
     ) {
         $this->uuid = $uuid;
+        $this->sessionUuid = $sessionUuid;
         $this->userUuid = $userUuid;
         $this->type = $type;
         $this->key = $key;
@@ -52,12 +56,22 @@ class User implements UserInterface
 
     public function getUsername()
     {
-        return $this->uuid;
+        return $this->sessionUuid;
     }
 
     public function eraseCredentials()
     {
+        $this->type = '';
+        $this->key = '';
         $this->datas = [];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 
     /**

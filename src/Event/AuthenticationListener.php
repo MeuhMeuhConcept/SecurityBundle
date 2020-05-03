@@ -32,10 +32,7 @@ class AuthenticationListener
             return;
         }
 
-        $authEntity = $this->em->getRepository(UserAuth::class)->findOneBy([
-            'type' => $token->getUser()->getType(),
-            'key' => $token->getUser()->getKey(),
-        ]);
+        $authEntity = $this->em->getRepository(UserAuth::class)->findOneByUuid($token->getUser()->getUuid());
 
         if (!$authEntity) {
             return;
@@ -46,7 +43,7 @@ class AuthenticationListener
             ->setType(ActivityType::LOGIN)
             ;
 
-        $session = new UserAuthSession($token->getUuid());
+        $session = new UserAuthSession($token->getUser()->getUsername());
         $session->setUserAuth($authEntity);
 
         if ($request->headers->has('user-agent')) {
@@ -57,5 +54,24 @@ class AuthenticationListener
         $this->em->persist($activity);
         $this->em->persist($session);
         $this->em->flush();
+    }
+
+    public function onAuthenticationSuccess(AuthenticationSuccessEvent $event)
+    {
+        $token = $event->getAuthenticationToken();
+
+        if (!$token || !$token->getUser() || !$token->getUser() instanceof User) {
+            return;
+        }
+
+        $qb = $this->em->getRepository(UserAuthSession::class)->createQueryBuilder('s')
+            ->where('s.uuid = :uuid')
+            ->setParameter('uuid', $token->getUser()->getUsername())
+            ->update()
+            ->set('s.updatedAt', ':now')
+            ->setParameter('now', new \Datetime())
+            ;
+
+        $qb->getQuery()->execute();
     }
 }
