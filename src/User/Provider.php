@@ -33,11 +33,24 @@ class Provider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
+        if (preg_match('/^(.*):(.*)$/', $username, $matches)) {
+            return $this->loadUserByTypeAndKey($matches[1], $matches[2]);
+        }
+
+        if (uuid_is_valid($username)) {
+            return $this->loadUserByUuuid($username);
+        }
+
+        throw new UsernameNotFoundException();
+    }
+
+    protected function loadUserByUuuid($uuid)
+    {
         $qb = $this->em->getRepository(UserAuthSession::class)->createQueryBuilder('s')
             ->innerJoin('s.userAuth', 'a')
             ->innerJoin('a.user', 'u')
             ->andWhere('s.uuid = :uuid')
-            ->setParameter('uuid', $username)
+            ->setParameter('uuid', $uuid)
             ->andWhere('a.isEnabled = true')
             ->andWhere('u.isEnabled = true')
             ;
@@ -51,7 +64,7 @@ class Provider implements UserProviderInterface
         return $this->buildUser($entity->getUserAuth(), $entity->getUuid());
     }
 
-    public function loadUserByTypeAndKey($type, $key)
+    protected function loadUserByTypeAndKey($type, $key)
     {
         $qb = $this->em->getRepository(UserAuth::class)->createQueryBuilder('a')
             ->innerJoin('a.user', 'u')
@@ -65,15 +78,15 @@ class Provider implements UserProviderInterface
 
         $entity = $qb->getQuery()->getOneOrNullResult();
 
+        if (!$entity) {
+            throw new UsernameNotFoundException();
+        }
+
         return $this->buildUser($entity);
     }
 
     protected function buildUser(UserAuth $entity, $uuid = null)
     {
-        if (!$entity) {
-            throw new UsernameNotFoundException();
-        }
-
         return new User(
             $entity->getUuid(),
             $uuid ?: uuid_create(UUID_TYPE_RANDOM),

@@ -2,8 +2,6 @@
 
 namespace Mmc\Security\User;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-
 class User implements UserInterface
 {
     protected $uuid;
@@ -46,12 +44,12 @@ class User implements UserInterface
 
     public function getPassword()
     {
-        return null;
+        return $this->getData('password');
     }
 
     public function getSalt()
     {
-        return null;
+        return $this->getData('salt');
     }
 
     public function getUsername()

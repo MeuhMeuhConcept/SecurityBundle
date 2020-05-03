@@ -3,9 +3,9 @@
 namespace Mmc\Security\Authentication\Authenticator;
 
 use Mmc\Security\Authentication\Token \MmcToken;
-use Mmc\Security\User\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UsernamePasswordAuthenticator implements AuthenticatorInterface
 {
@@ -17,14 +17,14 @@ class UsernamePasswordAuthenticator implements AuthenticatorInterface
         $this->encoderFactory = $encoderFactory;
     }
 
-    public function supports(MmcToken $token): bool
+    public function supports(MmcToken $token, UserInterface $user): bool
     {
         return 'username_password' == $token->getType();
     }
 
-    public function authenticate(MmcToken $token, User $user): bool
+    public function authenticate(MmcToken $token, UserInterface $user): bool
     {
-        if (!$user || !$user->getData('password')) {
+        if (!$user || !$user->getPassword()) {
             return false;
         }
 
@@ -36,7 +36,7 @@ class UsernamePasswordAuthenticator implements AuthenticatorInterface
             return false;
         }
 
-        if (!$encoder->isPasswordValid($user->getData('password'), $password, $user->getData('salt'))) {
+        if (!$encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
             throw new BadCredentialsException('The presented password is invalid.');
         }
 

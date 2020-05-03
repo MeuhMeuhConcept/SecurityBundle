@@ -4,10 +4,11 @@ namespace Mmc\Security\Authentication\Provider;
 
 use Mmc\Security\Authentication\Authenticator\AuthenticatorInterface;
 use Mmc\Security\Authentication\Token\MmcToken;
-use Mmc\Security\User\User;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class MmcProvider implements AuthenticationProviderInterface
@@ -25,7 +26,19 @@ class MmcProvider implements AuthenticationProviderInterface
 
     public function authenticate(TokenInterface $token)
     {
-        $user = $this->userProvider->loadUserByTypeAndKey($token->getType(), $token->getKey());
+        $user = null;
+        if ($token->getType() == 'username_password') {
+            // trying to basicly get user (for incompitable user provider)
+            try {
+                $user = $this->userProvider->loadUserByUsername($token->getKey());
+            } catch (UsernameNotFoundException $e) {
+
+            }
+        }
+
+        if (!$user) {
+            $user = $this->userProvider->loadUserByUsername($token->getType() . ':' . $token->getKey());
+        }
 
         if ($user && $this->validate($token, $user)) {
             $authenticatedToken = new MmcToken($token->getType(), $token->getKey(), $token->getProviderKey(), ['IS_AUTHENTICATED_FULLY']);
@@ -37,10 +50,10 @@ class MmcProvider implements AuthenticationProviderInterface
         throw new AuthenticationException('The MMC authentication failed.');
     }
 
-    protected function validate(MmcToken $token, User $user)
+    protected function validate(MmcToken $token, UserInterface $user)
     {
         foreach ($this->authenticators as $key => $authenticator) {
-            if ($authenticator instanceof AuthenticatorInterface && $authenticator->supports($token)) {
+            if ($authenticator instanceof AuthenticatorInterface && $authenticator->supports($token, $user)) {
                 return $authenticator->authenticate($token, $user);
             }
         }

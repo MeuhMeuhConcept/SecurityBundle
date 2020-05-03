@@ -9,6 +9,7 @@ use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Entity\UserAuthActivity;
 use Mmc\Security\Entity\UserAuthSession;
 use Mmc\Security\User\User;
+use Mmc\Security\User\UserInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -28,7 +29,7 @@ class AuthenticationListener
 
         $token = $event->getAuthenticationToken();
 
-        if (!$token instanceof MmcToken || !$token->getUser()) {
+        if (!$token instanceof MmcToken || !$token->getUser() || !$token->getUser() instanceof UserInterface) {
             return;
         }
 
@@ -60,7 +61,7 @@ class AuthenticationListener
     {
         $token = $event->getAuthenticationToken();
 
-        if (!$token || !$token->getUser() || !$token->getUser() instanceof User) {
+        if (!$token || !$token->getUser() || !$token->getUser() instanceof UserInterface) {
             return;
         }
 
