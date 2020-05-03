@@ -8,7 +8,6 @@ use Mmc\Security\Entity\Enum\ActivityType;
 use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Entity\UserAuthActivity;
 use Mmc\Security\Entity\UserAuthSession;
-use Mmc\Security\User\User;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;

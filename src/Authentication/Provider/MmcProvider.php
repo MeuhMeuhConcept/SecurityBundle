@@ -27,17 +27,16 @@ class MmcProvider implements AuthenticationProviderInterface
     public function authenticate(TokenInterface $token)
     {
         $user = null;
-        if ($token->getType() == 'username_password') {
+        if ('username_password' == $token->getType()) {
             // trying to basicly get user (for incompitable user provider)
             try {
                 $user = $this->userProvider->loadUserByUsername($token->getKey());
             } catch (UsernameNotFoundException $e) {
-
             }
         }
 
         if (!$user) {
-            $user = $this->userProvider->loadUserByUsername($token->getType() . ':' . $token->getKey());
+            $user = $this->userProvider->loadUserByUsername($token->getType().':'.$token->getKey());
         }
 
         if ($user && $this->validate($token, $user)) {

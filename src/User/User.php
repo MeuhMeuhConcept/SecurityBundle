@@ -18,7 +18,6 @@ class User implements UserInterface
 
     protected $datas;
 
-
     public function __construct(
         $uuid,
         $sessionUuid,

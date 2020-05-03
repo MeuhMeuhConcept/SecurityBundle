@@ -4,8 +4,6 @@ namespace Mmc\Security\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Greg0ire\Enum\Bridge\Symfony\Validator\Constraint\Enum as EnumAssert;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -31,7 +29,6 @@ class UserAuthSession
      * @ORM\Column(type="guid")
      */
     protected $uuid;
-
 
     /**
      * @ORM\Column(type="json")
