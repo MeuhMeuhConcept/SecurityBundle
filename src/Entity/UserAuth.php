@@ -2,6 +2,7 @@
 
 namespace Mmc\Security\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -55,11 +56,17 @@ class UserAuth
      */
     protected $datas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserAuthActivity", mappedBy="userAuth")
+     */
+    protected $activities;
+
     public function __construct()
     {
         $this->datas = [];
         $this->isEnabled = true;
         $this->isVerified = false;
+        $this->activities = new ArrayCollection();
     }
 
     /**
@@ -200,5 +207,13 @@ class UserAuth
         $this->datas[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActivities()
+    {
+        return $this->activities;
     }
 }

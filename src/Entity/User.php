@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="`user`",indexes={@ORM\Index(name="uuid_idx", columns={"uuid"})})
+ * @ORM\Table(name="`user`", indexes={@ORM\Index(name="uuid_idx", columns={"uuid"})})
  */
 class User
 {
@@ -65,5 +65,13 @@ class User
     public function isEnabled()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuths()
+    {
+        return $this->auths;
     }
 }
