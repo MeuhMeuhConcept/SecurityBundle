@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6657c547b748e9022926d68e586d1211",
+    "content-hash": "59c33d2b51d2c1e216c7c0a3327f6018",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -894,54 +894,6 @@
                 "validator"
             ],
             "time": "2020-03-22T15:37:38+00:00"
-        },
-        {
-            "name": "meuhmeuhconcept/processor",
-            "version": "2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MeuhMeuhConcept/processor.git",
-                "reference": "5405199d1a09003710bd0f18006025e69d5a96a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/MeuhMeuhConcept/processor/zipball/5405199d1a09003710bd0f18006025e69d5a96a7",
-                "reference": "5405199d1a09003710bd0f18006025e69d5a96a7",
-                "shasum": ""
-            },
-            "require": {
-                "greg0ire/enum": ">=3.1",
-                "php": ">5.3.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.12",
-                "matthiasnoback/symfony-dependency-injection-test": "^1.0",
-                "phpunit/phpunit": "^5.5",
-                "symfony/http-kernel": "^2.7 || ^3.0",
-                "symfony/options-resolver": "^2.7 || ^3.0"
-            },
-            "suggest": {
-                "symfony/http-kernel": "^2.7 || ^3.0",
-                "symfony/options-resolver": "^2.7 || ^3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Mmc\\Processor\\": "src/Mmc/Processor"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "jngermon",
-                    "email": "jn.germon@meuhmeuhconcept.com"
-                }
-            ],
-            "description": "Mechanism to process a work from a request",
-            "time": "2020-05-02T06:23:56+00:00"
         },
         {
             "name": "paragonie/random_compat",
