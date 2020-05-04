@@ -38,6 +38,8 @@ class AuthenticationListener
             return;
         }
 
+        $authEntity->setIsVerified(true);
+
         $activity = new UserAuthActivity();
         $activity->setUserAuth($authEntity)
             ->setType(ActivityType::LOGIN)
@@ -51,6 +53,7 @@ class AuthenticationListener
             $session->setData('user_agent', $request->headers->get('user-agent'));
         }
 
+        $this->em->persist($authEntity);
         $this->em->persist($activity);
         $this->em->persist($session);
         $this->em->flush();
