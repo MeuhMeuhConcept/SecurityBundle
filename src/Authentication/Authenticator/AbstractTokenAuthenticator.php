@@ -3,12 +3,12 @@
 namespace Mmc\Security\Authentication\Authenticator;
 
 use Mmc\Security\Authentication\Token\MmcToken;
-use Mmc\Security\Entity\Enum\AuthType;
+use Mmc\Security\Exception\TokenExpiredException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UsernamePasswordAuthenticator implements AuthenticatorInterface
+abstract class AbstractTokenAuthenticator implements AuthenticatorInterface
 {
     protected $encoderFactory;
 
@@ -18,15 +18,19 @@ class UsernamePasswordAuthenticator implements AuthenticatorInterface
         $this->encoderFactory = $encoderFactory;
     }
 
-    public function supports(MmcToken $token, UserInterface $user): bool
-    {
-        return AuthType::USERNAME_PASSWORD == $token->getType();
-    }
+    abstract public function supports(MmcToken $token, UserInterface $user): bool;
 
     public function authenticate(MmcToken $token, UserInterface $user): bool
     {
-        if (!$user || !$user->getPassword()) {
+        if (!$user || !$user->getPassword() || !$user->getData('expired_at')) {
             return false;
+        }
+
+        $expiredAt = new \Datetime($user->getData('expired_at'));
+        $now = new \Datetime();
+
+        if ($now > $expiredAt) {
+            throw new TokenExpiredException();
         }
 
         $encoder = $this->encoderFactory->getEncoder($user);

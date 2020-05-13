@@ -21,6 +21,11 @@ services:
             - '' #UserProvider
             - [] #Authenticators
 
+    security.authentication.provider.mmc.authenticators.token_by_email:
+        class: Mmc\Security\Authentication\Authenticator\TokenByEmailAuthenticator
+        arguments:
+            - '@security.encoder_factory'
+
     security.authentication.provider.mmc.authenticators.username_password:
         class: Mmc\Security\Authentication\Authenticator\UsernamePasswordAuthenticator
         arguments:
@@ -32,9 +37,51 @@ services:
             - '@doctrine.orm.entity_manager'
 
     security.mmc.interactive_login_listener:
+        public: false
         class: Mmc\Security\Event\AuthenticationListener
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
             - { name: kernel.event_listener, event: security.authentication.success, method: onAuthenticationSuccess }
+
+    security.mmc.listener.authentication_activity:
+        public: false
+        class: Mmc\Security\Event\AuthenticationActivityListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+
+    security.mmc.listener.authentication_session:
+        public: false
+        class: Mmc\Security\Event\AuthenticationSessionListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+
+    security.mmc.listener.authentication_token_by_email:
+        public: false
+        class: Mmc\Security\Event\AuthenticationTokenByEmailListener
+        tags:
+            - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+
+    security.mmc.service.authentication_token_by_email_refresher:
+        alias: Mmc\Security\Service\AuthenticationTokenByEmailRefresher
+        public: true
+
+    Mmc\Security\Service\AuthenticationTokenByEmailRefresher:
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.encoder_factory'
+            - '@security.mmc.service.number_base_token_generator'
+            - '1 minute'
+            - '5 minutes'
+
+    security.mmc.service.number_base_token_generator:
+        class: Mmc\Security\Service\NumberBaseTokenGenerator
+        arguments:
+            - 6

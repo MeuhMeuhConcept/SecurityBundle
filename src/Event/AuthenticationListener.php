@@ -4,22 +4,24 @@ namespace Mmc\Security\Event;
 
 use Doctrine\ORM\EntityManager;
 use Mmc\Security\Authentication\Token\MmcToken;
-use Mmc\Security\Entity\Enum\ActivityType;
 use Mmc\Security\Entity\UserAuth;
-use Mmc\Security\Entity\UserAuthActivity;
 use Mmc\Security\Entity\UserAuthSession;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AuthenticationListener
 {
     protected $em;
+    protected $eventDispatcher;
 
     public function __construct(
-        EntityManager $em
+        EntityManager $em,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->em = $em;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function onInteractiveLogin(InteractiveLoginEvent $event)
@@ -40,22 +42,9 @@ class AuthenticationListener
 
         $authEntity->setIsVerified(true);
 
-        $activity = new UserAuthActivity();
-        $activity->setUserAuth($authEntity)
-            ->setType(ActivityType::LOGIN)
-            ;
-
-        $session = new UserAuthSession($token->getUser()->getUsername());
-        $session->setUserAuth($authEntity);
-
-        if ($request->headers->has('user-agent')) {
-            $activity->setData('user_agent', $request->headers->get('user-agent'));
-            $session->setData('user_agent', $request->headers->get('user-agent'));
-        }
+        $this->eventDispatcher->dispatch(new MmcAuthenticationEvent($token, $authEntity, $request), MmcAuthenticationEvents::AUTHENTICATION_SUCCESS);
 
         $this->em->persist($authEntity);
-        $this->em->persist($activity);
-        $this->em->persist($session);
         $this->em->flush();
     }
 
