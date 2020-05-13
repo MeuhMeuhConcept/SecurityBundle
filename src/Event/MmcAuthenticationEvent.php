@@ -2,9 +2,9 @@
 
 namespace Mmc\Security\Event;
 
-use Mmc\Security\Authentication\Token\MmcToken;
 use Mmc\Security\Entity\UserAuth;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class MmcAuthenticationEvent extends Event
@@ -13,7 +13,7 @@ class MmcAuthenticationEvent extends Event
     private $authEntity;
     private $request;
 
-    public function __construct(MmcToken $token, UserAuth $authEntity, Request $request)
+    public function __construct(TokenInterface $token, UserAuth $authEntity, Request $request)
     {
         $this->token = $token;
         $this->authEntity = $authEntity;

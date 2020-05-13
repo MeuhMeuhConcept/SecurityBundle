@@ -31,4 +31,17 @@ class AuthenticationSessionListener
 
         $this->em->persist($session);
     }
+
+    public function onLogoutSuccess(MmcAuthenticationEvent $event)
+    {
+        $request = $event->getRequest();
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $session = $this->em->getRepository(UserAuthSession::class)->findOneByUuid($token->getUser()->getUsername());
+
+        if ($session) {
+            $this->em->remove($session);
+        }
+    }
 }

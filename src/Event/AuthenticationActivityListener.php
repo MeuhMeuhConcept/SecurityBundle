@@ -33,4 +33,21 @@ class AuthenticationActivityListener
 
         $this->em->persist($activity);
     }
+
+    public function onLogoutSuccess(MmcAuthenticationEvent $event)
+    {
+        $request = $event->getRequest();
+        $authEntity = $event->getAuthEntity();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setType(ActivityType::LOGOUT)
+            ;
+
+        if ($request->headers->has('user-agent')) {
+            $activity->setData('user_agent', $request->headers->get('user-agent'));
+        }
+
+        $this->em->persist($activity);
+    }
 }

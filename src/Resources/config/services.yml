@@ -53,6 +53,7 @@ services:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+            - { name: kernel.event_listener, event: security.mmc.logout.success, method: onLogoutSuccess }
 
     security.mmc.listener.authentication_session:
         public: false
@@ -61,12 +62,24 @@ services:
             - '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+            - { name: kernel.event_listener, event: security.mmc.logout.success, method: onLogoutSuccess }
 
     security.mmc.listener.authentication_token_by_email:
         public: false
         class: Mmc\Security\Event\AuthenticationTokenByEmailListener
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
+
+    security.mmc.logout.handler:
+        public: false
+        class: Mmc\Security\Logout\LogoutHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+
+    security.mmc.logout.handler_success:
+        public: false
+        class: Mmc\Security\Logout\LogoutSuccessHandler
 
     security.mmc.service.authentication_token_by_email_refresher:
         alias: Mmc\Security\Service\AuthenticationTokenByEmailRefresher
