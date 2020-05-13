@@ -28,7 +28,6 @@ class LogoutHandler implements LogoutHandlerInterface
 
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
-
         if (!$token->getUser() || !$token->getUser() instanceof UserInterface) {
             return;
         }

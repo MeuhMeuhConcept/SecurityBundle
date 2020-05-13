@@ -4,7 +4,6 @@ namespace Mmc\Security\Event;
 
 use Doctrine\ORM\EntityManager;
 use Mmc\Security\Entity\Enum\ActivityType;
-use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Entity\UserAuthActivity;
 
 class AuthenticationActivityListener

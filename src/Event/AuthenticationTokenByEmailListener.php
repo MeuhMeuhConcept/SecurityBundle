@@ -3,7 +3,6 @@
 namespace Mmc\Security\Event;
 
 use Mmc\Security\Entity\Enum\AuthType;
-use Mmc\Security\Entity\UserAuth;
 
 class AuthenticationTokenByEmailListener
 {
@@ -11,7 +10,7 @@ class AuthenticationTokenByEmailListener
     {
         $authEntity = $event->getAuthEntity();
 
-        if ($authEntity->getType() != AuthType::TOKEN_BY_EMAIL) {
+        if (AuthType::TOKEN_BY_EMAIL != $authEntity->getType()) {
             return;
         }
 
