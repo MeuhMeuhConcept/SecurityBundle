@@ -79,6 +79,11 @@ class MmcToken extends AbstractToken
         return $this;
     }
 
+    public function hasExtra($key)
+    {
+        return isset($this->extras[$key]);
+    }
+
     public function getExtra($key)
     {
         if (isset($this->extras[$key])) {
@@ -86,5 +91,12 @@ class MmcToken extends AbstractToken
         }
 
         return null;
+    }
+
+    public function setExtra($key, $value)
+    {
+        $this->extras[$key] = $value;
+
+        return $this;
     }
 }

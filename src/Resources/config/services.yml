@@ -60,6 +60,7 @@ services:
         class: Mmc\Security\Event\AuthenticationSessionListener
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@security.mmc.service.session_ttl_provider'
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.interactive_success, method: onAuthenticationInteractiveSuccess }
             - { name: kernel.event_listener, event: security.mmc.authentication.success, method: onAuthenticationSuccess }
@@ -99,3 +100,9 @@ services:
         class: Mmc\Security\Service\NumberBaseTokenGenerator
         arguments:
             - 6
+
+    security.mmc.service.session_ttl_provider:
+        public: false
+        class: Mmc\Security\Service\SessionTTLProvider
+        arguments:
+            - []

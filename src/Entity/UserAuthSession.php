@@ -35,6 +35,12 @@ class UserAuthSession
      */
     protected $datas;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $expiredAt;
+
     public function __construct($uuid)
     {
         $this->uuid = $uuid;
@@ -107,5 +113,29 @@ class UserAuthSession
         $this->datas[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * Sets expiredAt.
+     *
+     * @param \DateTime $expiredAt
+     *
+     * @return $this
+     */
+    public function setExpiredAt(\DateTimeInterface $expiredAt = null)
+    {
+        $this->expiredAt = $expiredAt;
+
+        return $this;
+    }
+
+    /**
+     * Returns expiredAt.
+     *
+     * @return \DateTime
+     */
+    public function getExpiredAt()
+    {
+        return $this->expiredAt;
     }
 }

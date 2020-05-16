@@ -5,7 +5,6 @@ namespace Mmc\Security\Event;
 use Doctrine\ORM\EntityManager;
 use Mmc\Security\Authentication\Token\MmcToken;
 use Mmc\Security\Entity\UserAuth;
-use Mmc\Security\Entity\UserAuthSession;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;

@@ -42,6 +42,9 @@ class MmcProvider implements AuthenticationProviderInterface
         if ($user && $this->validate($token, $user)) {
             $authenticatedToken = new MmcToken($token->getType(), $token->getKey(), $token->getProviderKey(), ['IS_AUTHENTICATED_FULLY']);
             $authenticatedToken->setUser($user);
+            if ($token->hasExtra('rememberMe')) {
+                $authenticatedToken->setExtra('rememberMe', $token->getExtra('rememberMe'));
+            }
 
             return $authenticatedToken;
         }

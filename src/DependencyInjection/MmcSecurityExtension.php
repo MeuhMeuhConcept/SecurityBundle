@@ -13,5 +13,11 @@ class MmcSecurityExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $definition = $container->getDefinition('security.mmc.service.session_ttl_provider');
+        $definition->replaceArgument(0, $config['sessionTTL']);
     }
 }

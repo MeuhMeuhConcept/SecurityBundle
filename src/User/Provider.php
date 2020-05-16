@@ -53,6 +53,8 @@ class Provider implements UserProviderInterface
             ->setParameter('uuid', $uuid)
             ->andWhere('a.isEnabled = true')
             ->andWhere('u.isEnabled = true')
+            ->andWhere('s.expiredAt IS NULL OR s.expiredAt > :now')
+            ->setParameter('now', new \Datetime())
             ;
 
         $entity = $qb->getQuery()->getOneOrNullResult();

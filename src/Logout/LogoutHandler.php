@@ -4,8 +4,8 @@ namespace Mmc\Security\Logout;
 
 use Doctrine\ORM\EntityManager;
 use Mmc\Security\Entity\UserAuth;
-use Mmc\Security\Event\MmcAuthenticationInteractiveEvent;
 use Mmc\Security\Event\MmcAuthenticationEvents;
+use Mmc\Security\Event\MmcAuthenticationInteractiveEvent;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -58,7 +58,6 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
-        $this->type = '';
         $this->key = '';
         $this->datas = [];
     }
