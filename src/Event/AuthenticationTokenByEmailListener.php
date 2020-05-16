@@ -6,7 +6,7 @@ use Mmc\Security\Entity\Enum\AuthType;
 
 class AuthenticationTokenByEmailListener
 {
-    public function onAuthenticationSuccess(MmcAuthenticationEvent $event)
+    public function onAuthenticationInteractiveSuccess(MmcAuthenticationInteractiveEvent $event)
     {
         $authEntity = $event->getAuthEntity();
 

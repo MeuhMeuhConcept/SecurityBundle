@@ -16,7 +16,7 @@ class AuthenticationActivityListener
         $this->em = $em;
     }
 
-    public function onAuthenticationSuccess(MmcAuthenticationEvent $event)
+    public function onAuthenticationInteractiveSuccess(MmcAuthenticationInteractiveEvent $event)
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
@@ -33,7 +33,7 @@ class AuthenticationActivityListener
         $this->em->persist($activity);
     }
 
-    public function onLogoutSuccess(MmcAuthenticationEvent $event)
+    public function onLogoutSuccess(MmcAuthenticationInteractiveEvent $event)
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();

@@ -42,7 +42,7 @@ class AuthenticationListener
 
         $authEntity->setIsVerified(true);
 
-        $this->eventDispatcher->dispatch(new MmcAuthenticationEvent($token, $authEntity, $request), MmcAuthenticationEvents::AUTHENTICATION_SUCCESS);
+        $this->eventDispatcher->dispatch(new MmcAuthenticationInteractiveEvent($token, $authEntity, $request), MmcAuthenticationEvents::AUTHENTICATION_INTERACTIVE_SUCCESS);
 
         $this->em->persist($authEntity);
         $this->em->flush();
@@ -56,14 +56,6 @@ class AuthenticationListener
             return;
         }
 
-        $qb = $this->em->getRepository(UserAuthSession::class)->createQueryBuilder('s')
-            ->where('s.uuid = :uuid')
-            ->setParameter('uuid', $token->getUser()->getUsername())
-            ->update()
-            ->set('s.updatedAt', ':now')
-            ->setParameter('now', new \Datetime())
-            ;
-
-        $qb->getQuery()->execute();
+        $this->eventDispatcher->dispatch(new MmcAuthenticationEvent($token), MmcAuthenticationEvents::AUTHENTICATION_SUCCESS);
     }
 }

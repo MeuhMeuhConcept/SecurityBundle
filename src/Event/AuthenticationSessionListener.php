@@ -15,7 +15,7 @@ class AuthenticationSessionListener
         $this->em = $em;
     }
 
-    public function onAuthenticationSuccess(MmcAuthenticationEvent $event)
+    public function onAuthenticationInteractiveSuccess(MmcAuthenticationInteractiveEvent $event)
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
@@ -31,7 +31,22 @@ class AuthenticationSessionListener
         $this->em->persist($session);
     }
 
-    public function onLogoutSuccess(MmcAuthenticationEvent $event)
+    public function onAuthenticationSuccess(MmcAuthenticationEvent $event)
+    {
+        $token = $event->getToken();
+
+        $qb = $this->em->getRepository(UserAuthSession::class)->createQueryBuilder('s')
+            ->where('s.uuid = :uuid')
+            ->setParameter('uuid', $token->getUser()->getUsername())
+            ->update()
+            ->set('s.updatedAt', ':now')
+            ->setParameter('now', new \Datetime())
+            ;
+
+        $qb->getQuery()->execute();
+    }
+
+    public function onLogoutSuccess(MmcAuthenticationInteractiveEvent $event)
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
