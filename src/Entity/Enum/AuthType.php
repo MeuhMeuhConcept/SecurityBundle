@@ -8,4 +8,5 @@ final class AuthType extends AbstractEnum
 {
     const USERNAME_PASSWORD = 'username_password';
     const TOKEN_BY_EMAIL = 'token_by_email';
+    const ANONYMOUS = 'anonymous';
 }

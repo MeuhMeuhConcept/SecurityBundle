@@ -31,6 +31,16 @@ services:
         arguments:
             - '@security.encoder_factory'
 
+    security.authentication.provider.mmc.authenticators.anonymous:
+        class: Mmc\Security\Authentication\Authenticator\AnonymousAuthenticator
+
+    security.mmc.command.create_anonymous_user:
+        class: Mmc\Security\Command\CreateAnonymousUserCommand
+        arguments:
+            - '@doctrine.orm.entity_manager'
+        tags:
+            - { name: console.command }
+
     security.user.provider.mmc:
         class: Mmc\Security\User\Provider
         arguments:
