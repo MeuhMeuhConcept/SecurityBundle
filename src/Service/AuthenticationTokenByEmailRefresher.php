@@ -49,7 +49,7 @@ class AuthenticationTokenByEmailRefresher
             $generatedAt = new \Datetime($userAuth->getData('generated_at'));
 
             if ($generatedAt > $limitGeneratedAt) {
-                //throw new Exception\AuthenticationTokenByEmailRefresher('too_soon');
+                throw new Exception\AuthenticationTokenByEmailRefresher('too_soon');
             }
         }
 
