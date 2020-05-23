@@ -28,6 +28,11 @@ class UserAuthActivity
     protected $userAuth;
 
     /**
+     * @ORM\Column(type="guid", nullable=true)
+     */
+    protected $sessionUuid;
+
+    /**
      * @ORM\Column(type="string", length=20, nullable=false)
      * @EnumAssert("Mmc\Security\Entity\Enum\ActivityType")
      * @Assert\NotBlank
@@ -120,6 +125,26 @@ class UserAuthActivity
     public function setData($name, $value)
     {
         $this->datas[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionUuid()
+    {
+        return $this->sessionUuid;
+    }
+
+    /**
+     * @param mixed $sessionUuid
+     *
+     * @return self
+     */
+    public function setSessionUuid($sessionUuid)
+    {
+        $this->sessionUuid = $sessionUuid;
 
         return $this;
     }

@@ -20,9 +20,11 @@ class AuthenticationActivityListener
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
 
         $activity = new UserAuthActivity();
         $activity->setUserAuth($authEntity)
+            ->setSessionUuid($token->getUser()->getUsername())
             ->setType(ActivityType::LOGIN)
             ;
 
@@ -37,9 +39,11 @@ class AuthenticationActivityListener
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
 
         $activity = new UserAuthActivity();
         $activity->setUserAuth($authEntity)
+            ->setSessionUuid($token->getUser()->getUsername())
             ->setType(ActivityType::LOGOUT)
             ;
 
