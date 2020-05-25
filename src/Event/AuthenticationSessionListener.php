@@ -19,7 +19,7 @@ class AuthenticationSessionListener
         $this->sessionTTLProvider = $sessionTTLProvider;
     }
 
-    public function onAuthenticationInteractiveSuccess(MmcAuthenticationInteractiveEvent $event)
+    public function onAuthenticationInteractiveSuccess(MmcAuthenticationRelativeUserAuthEvent $event)
     {
         $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
@@ -28,7 +28,7 @@ class AuthenticationSessionListener
         $session = new UserAuthSession($token->getUser()->getUsername());
         $session->setUserAuth($authEntity);
 
-        if ($request->headers->has('user-agent')) {
+        if ($request && $request->headers->has('user-agent')) {
             $session->setData('user_agent', $request->headers->get('user-agent'));
         }
 
@@ -66,9 +66,8 @@ class AuthenticationSessionListener
         $qb->getQuery()->execute();
     }
 
-    public function onLogoutSuccess(MmcAuthenticationInteractiveEvent $event)
+    public function onLogoutSuccess(MmcAuthenticationRelativeUserAuthEvent $event)
     {
-        $request = $event->getRequest();
         $authEntity = $event->getAuthEntity();
         $token = $event->getToken();
 

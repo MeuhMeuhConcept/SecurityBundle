@@ -64,6 +64,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.interactive_success, method: onAuthenticationInteractiveSuccess }
             - { name: kernel.event_listener, event: security.mmc.logout.success, method: onLogoutSuccess }
+            - { name: kernel.event_listener, event: security.mmc.authentication.change_password, method: onPasswordChange }
 
     security.mmc.listener.authentication_session:
         public: false
@@ -116,3 +117,15 @@ services:
         class: Mmc\Security\Service\SessionTTLProvider
         arguments:
             - []
+
+    security.mmc.service.authentication_username_password_updater:
+        alias: Mmc\Security\Service\AuthenticationUsernamePasswordUpdater
+        public: true
+
+    Mmc\Security\Service\AuthenticationUsernamePasswordUpdater:
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.encoder_factory'
+            - '@event_dispatcher'
+            - '@security.token_storage'

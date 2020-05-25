@@ -6,12 +6,12 @@ use Mmc\Security\Entity\UserAuth;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class MmcAuthenticationInteractiveEvent extends MmcAuthenticationEvent
+class MmcAuthenticationRelativeUserAuthEvent extends MmcAuthenticationEvent
 {
     private $authEntity;
     private $request;
 
-    public function __construct(TokenInterface $token, UserAuth $authEntity, Request $request)
+    public function __construct(TokenInterface $token, UserAuth $authEntity, Request $request = null)
     {
         parent::__construct($token);
         $this->authEntity = $authEntity;

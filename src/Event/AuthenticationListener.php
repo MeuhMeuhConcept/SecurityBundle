@@ -41,7 +41,7 @@ class AuthenticationListener
 
         $authEntity->setIsVerified(true);
 
-        $this->eventDispatcher->dispatch(new MmcAuthenticationInteractiveEvent($token, $authEntity, $request), MmcAuthenticationEvents::AUTHENTICATION_INTERACTIVE_SUCCESS);
+        $this->eventDispatcher->dispatch(new MmcAuthenticationRelativeUserAuthEvent($token, $authEntity, $request), MmcAuthenticationEvents::AUTHENTICATION_INTERACTIVE_SUCCESS);
 
         $this->em->persist($authEntity);
         $this->em->flush();

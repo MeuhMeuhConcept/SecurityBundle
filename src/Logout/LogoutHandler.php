@@ -5,7 +5,7 @@ namespace Mmc\Security\Logout;
 use Doctrine\ORM\EntityManager;
 use Mmc\Security\Entity\UserAuth;
 use Mmc\Security\Event\MmcAuthenticationEvents;
-use Mmc\Security\Event\MmcAuthenticationInteractiveEvent;
+use Mmc\Security\Event\MmcAuthenticationRelativeUserAuthEvent;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +38,7 @@ class LogoutHandler implements LogoutHandlerInterface
             return;
         }
 
-        $this->eventDispatcher->dispatch(new MmcAuthenticationInteractiveEvent($token, $authEntity, $request), MmcAuthenticationEvents::LOGOUT_SUCCESS);
+        $this->eventDispatcher->dispatch(new MmcAuthenticationRelativeUserAuthEvent($token, $authEntity, $request), MmcAuthenticationEvents::LOGOUT_SUCCESS);
 
         $this->em->persist($authEntity);
         $this->em->flush();
