@@ -65,6 +65,7 @@ services:
             - { name: kernel.event_listener, event: security.mmc.authentication.interactive_success, method: onAuthenticationInteractiveSuccess }
             - { name: kernel.event_listener, event: security.mmc.logout.success, method: onLogoutSuccess }
             - { name: kernel.event_listener, event: security.mmc.authentication.change_password, method: onPasswordChange }
+            - { name: kernel.event_listener, event: security.mmc.authentication.refresh_token_by_email, method: onRefreshTokenByEmail }
 
     security.mmc.listener.authentication_session:
         public: false
@@ -106,6 +107,8 @@ services:
             - '@security.mmc.service.number_base_token_generator'
             - '1 minute'
             - '5 minutes'
+            - '@event_dispatcher'
+            - '@security.token_storage'
 
     security.mmc.service.number_base_token_generator:
         class: Mmc\Security\Service\NumberBaseTokenGenerator

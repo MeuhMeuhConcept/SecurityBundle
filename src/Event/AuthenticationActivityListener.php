@@ -3,6 +3,7 @@
 namespace Mmc\Security\Event;
 
 use Doctrine\ORM\EntityManager;
+use Mmc\Security\Authentication\Token\MmcToken;
 use Mmc\Security\Entity\Enum\ActivityType;
 use Mmc\Security\Entity\UserAuthActivity;
 
@@ -65,6 +66,24 @@ class AuthenticationActivityListener
             ->setType(ActivityType::CHANGE_PASSWORD)
             ->setDatas($event->getExtras())
             ;
+
+        $this->em->persist($activity);
+    }
+
+    public function onRefreshTokenByEmail(MmcAuthenticationEvent $event)
+    {
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setType(ActivityType::REFRESH_TOKEN_BY_EMAIL)
+            ->setDatas($event->getExtras())
+            ;
+
+        if ($token instanceof MmcToken) {
+            $activity->setSessionUuid($token->getUser()->getUsername());
+        }
 
         $this->em->persist($activity);
     }

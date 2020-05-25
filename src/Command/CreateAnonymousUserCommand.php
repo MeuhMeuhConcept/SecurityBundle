@@ -39,7 +39,7 @@ class CreateAnonymousUserCommand extends Command
 
         $auth = $this->em->getRepository(UserAuth::class)->findOneBy([
             'type' => AuthType::ANONYMOUS,
-            'key' => $key
+            'key' => $key,
         ]);
 
         if ($auth) {

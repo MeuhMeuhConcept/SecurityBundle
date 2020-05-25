@@ -11,4 +11,6 @@ final class MmcAuthenticationEvents
     const LOGOUT_SUCCESS = 'security.mmc.logout.success';
 
     const AUTHENTICATION_CHANGE_PASSWORD = 'security.mmc.authentication.change_password';
+
+    const AUTHENTICATION_REFRESH_TOKEN_BY_EMAIL = 'security.mmc.authentication.refresh_token_by_email';
 }
