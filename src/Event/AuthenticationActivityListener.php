@@ -70,6 +70,21 @@ class AuthenticationActivityListener
         $this->em->persist($activity);
     }
 
+    public function onUsernameChange(MmcAuthenticationEvent $event)
+    {
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setSessionUuid($token->getUser()->getUsername())
+            ->setType(ActivityType::CHANGE_USERNAME)
+            ->setDatas($event->getExtras())
+            ;
+
+        $this->em->persist($activity);
+    }
+
     public function onRefreshTokenByEmail(MmcAuthenticationEvent $event)
     {
         $authEntity = $event->getAuthEntity();

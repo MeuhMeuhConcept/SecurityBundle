@@ -12,5 +12,7 @@ final class MmcAuthenticationEvents
 
     const AUTHENTICATION_CHANGE_PASSWORD = 'security.mmc.authentication.change_password';
 
+    const AUTHENTICATION_CHANGE_USERNAME = 'security.mmc.authentication.change_username';
+
     const AUTHENTICATION_REFRESH_TOKEN_BY_EMAIL = 'security.mmc.authentication.refresh_token_by_email';
 }

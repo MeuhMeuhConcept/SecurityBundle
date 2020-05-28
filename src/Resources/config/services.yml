@@ -65,6 +65,7 @@ services:
             - { name: kernel.event_listener, event: security.mmc.authentication.interactive_success, method: onAuthenticationInteractiveSuccess }
             - { name: kernel.event_listener, event: security.mmc.logout.success, method: onLogoutSuccess }
             - { name: kernel.event_listener, event: security.mmc.authentication.change_password, method: onPasswordChange }
+            - { name: kernel.event_listener, event: security.mmc.authentication.change_username, method: onUsernameChange }
             - { name: kernel.event_listener, event: security.mmc.authentication.refresh_token_by_email, method: onRefreshTokenByEmail }
 
     security.mmc.listener.authentication_session:
@@ -132,3 +133,4 @@ services:
             - '@security.encoder_factory'
             - '@event_dispatcher'
             - '@security.token_storage'
+            - '@validator'
