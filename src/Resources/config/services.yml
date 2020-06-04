@@ -67,6 +67,8 @@ services:
             - { name: kernel.event_listener, event: security.mmc.authentication.change_password, method: onPasswordChange }
             - { name: kernel.event_listener, event: security.mmc.authentication.change_username, method: onUsernameChange }
             - { name: kernel.event_listener, event: security.mmc.authentication.refresh_token_by_email, method: onRefreshTokenByEmail }
+            - { name: kernel.event_listener, event: security.mmc.authentication.token_by_email_has_been_verified, method: onVerifyTokenByEmail }
+            - { name: kernel.event_listener, event: security.mmc.authentication.change_email, method: onEmailChange }
 
     security.mmc.listener.authentication_session:
         public: false
@@ -110,6 +112,30 @@ services:
             - '5 minutes'
             - '@event_dispatcher'
             - '@security.token_storage'
+
+    security.mmc.service.authentication_token_by_email_verifier:
+        alias: Mmc\Security\Service\AuthenticationTokenByEmailVerifier
+        public: true
+
+    Mmc\Security\Service\AuthenticationTokenByEmailVerifier:
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@security.encoder_factory'
+            - '@event_dispatcher'
+            - '@security.token_storage'
+
+    security.mmc.service.authentication_token_by_email_updater:
+        alias: Mmc\Security\Service\AuthenticationTokenByEmailUpdater
+        public: true
+
+    Mmc\Security\Service\AuthenticationTokenByEmailUpdater:
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '@security.token_storage'
+            - '@validator'
 
     security.mmc.service.number_base_token_generator:
         class: Mmc\Security\Service\NumberBaseTokenGenerator

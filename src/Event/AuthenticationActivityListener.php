@@ -102,4 +102,37 @@ class AuthenticationActivityListener
 
         $this->em->persist($activity);
     }
+
+    public function onVerifyTokenByEmail(MmcAuthenticationEvent $event)
+    {
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setType(ActivityType::TOKEN_BY_EMAIL_HAS_BEEN_VERIFIED)
+            ->setDatas($event->getExtras())
+            ;
+
+        if ($token instanceof MmcToken) {
+            $activity->setSessionUuid($token->getUser()->getUsername());
+        }
+
+        $this->em->persist($activity);
+    }
+
+    public function onEmailChange(MmcAuthenticationEvent $event)
+    {
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setSessionUuid($token->getUser()->getUsername())
+            ->setType(ActivityType::CHANGE_EMAIL)
+            ->setDatas($event->getExtras())
+            ;
+
+        $this->em->persist($activity);
+    }
 }
