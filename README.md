@@ -91,3 +91,69 @@ use Mmc\Security\DependencyInjection\Security\Factory\MmcLoginFactory;
     }
 ...
 ```
+
+### Add login_check route
+Don't forget to add this route to your `config/routes.yaml`
+```
+api_login_check:
+    path: /api/login_check
+```
+
+### If you use lexit/jwt-authentication-bundle
+Add this service in your project
+```
+<?php
+
+namespace App\Security;
+
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Mmc\Security\Authentication\Token\MmcToken;
+use Mmc\Security\Service\SessionTTLProvider;
+use Mmc\Security\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+class JWTCreatedListener
+{
+    protected $tokenStorage;
+
+    protected $sessionTTLProvider;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        SessionTTLProvider $sessionTTLProvider
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->sessionTTLProvider = $sessionTTLProvider;
+    }
+
+    public function onJWTCreated(JWTCreatedEvent $event)
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token || !$token instanceof MmcToken) {
+            return;
+        }
+
+        $user = $token->getUser();
+
+        if (!$user || !$user instanceof UserInterface) {
+            return;
+        }
+
+        $ttl = $this->sessionTTLProvider->getSessionTTL($token->getType());
+        if ($token->hasExtra('rememberMe') && $token->getExtra('rememberMe')) {
+            $ttl = 2678400; // 60 * 60 * 24 * 31
+        }
+
+        $payload = $event->getData();
+
+        $payload['exp'] = time() + $ttl;
+
+        $payload['authType'] = $user->getType();
+        //$payload['name'] = $user->getName();
+        //$payload['firstname'] = $user->getFirstname();
+
+        $event->setData($payload);
+    }
+}
+```
