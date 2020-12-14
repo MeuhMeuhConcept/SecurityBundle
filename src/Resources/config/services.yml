@@ -87,16 +87,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.mmc.authentication.interactive_success, method: onAuthenticationInteractiveSuccess }
 
-    security.mmc.logout.handler:
+    security.mmc.logout.listener:
         public: false
-        class: Mmc\Security\Logout\LogoutHandler
+        class: Mmc\Security\Logout\LogoutListener
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
-
-    security.mmc.logout.handler_success:
-        public: false
-        class: Mmc\Security\Logout\LogoutSuccessHandler
 
     security.mmc.service.authentication_token_by_email_refresher:
         alias: Mmc\Security\Service\AuthenticationTokenByEmailRefresher

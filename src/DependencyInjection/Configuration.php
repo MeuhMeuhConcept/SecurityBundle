@@ -27,6 +27,9 @@ class Configuration implements ConfigurationInterface
         $node
                     ->end()
                 ->end()
+                ->arrayNode('logout')
+                    ->prototype('scalar')->end()
+                ->end()
             ->end()
             ;
 

@@ -3,12 +3,12 @@ Provides user management for Symfony3 Project.
 
 
 ## CONFIGURATION
-You have to enable CAST syntax on DQL, add these configuration for doctrine
+Typical `config/packages/mmc_security.yaml`
 ```
-orm:
-    entity_managers:
-      default:
-        dql:
-          string_functions:
-            CAST: AppBundle\Doctrine\DQL\PostgreSQL\Cast
+mmc_security:
+    sessionTTL:
+        anonymous: 600
+    logout:
+        - 'api' // Connect LogoutLister to the firewall 'api'
+
 ```

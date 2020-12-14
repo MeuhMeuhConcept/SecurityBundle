@@ -19,5 +19,13 @@ class MmcSecurityExtension extends Extension
 
         $definition = $container->getDefinition('security.mmc.service.session_ttl_provider');
         $definition->replaceArgument(0, $config['sessionTTL']);
+
+        $definition = $container->getDefinition('security.mmc.logout.listener');
+        foreach ($config['logout'] as $firewall) {
+            $definition->addTag('kernel.event_subscriber', [
+                'event' => 'Symfony\Component\Security\Http\Event\LogoutEvent',
+                'dispatcher' => 'security.event_dispatcher.' . $firewall,
+            ]);
+        }
     }
 }
