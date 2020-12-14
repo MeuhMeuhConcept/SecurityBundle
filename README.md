@@ -10,5 +10,5 @@ orm:
       default:
         dql:
           string_functions:
-            CAST: Oro\ORM\Query\AST\Functions\Cast
+            CAST: AppBundle\Doctrine\DQL\PostgreSQL\Cast
 ```
