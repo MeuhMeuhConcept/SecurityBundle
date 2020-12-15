@@ -9,7 +9,6 @@ use Mmc\Security\Event\MmcAuthenticationRelativeUserAuthEvent;
 use Mmc\Security\User\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -28,25 +27,21 @@ class LogoutListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return ['logout' => 'logout'];
+        return [LogoutEvent::class => 'logout'];
     }
 
     public function logout(LogoutEvent $event)
     {
-        if (!$event->getToken()->getUser() || !$event->getToken()->getUser() instanceof UserInterface) {
-            return;
+        if ($event->getToken()->getUser() && $event->getToken()->getUser() instanceof UserInterface) {
+            $authEntity = $this->em->getRepository(UserAuth::class)->findOneByUuid($event->getToken()->getUser()->getUuid());
+
+            if ($authEntity) {
+                $this->eventDispatcher->dispatch(new MmcAuthenticationRelativeUserAuthEvent($event->getToken(), $authEntity, $event->getRequest()), MmcAuthenticationEvents::LOGOUT_SUCCESS);
+
+                $this->em->persist($authEntity);
+                $this->em->flush();
+            }
         }
-
-        $authEntity = $this->em->getRepository(UserAuth::class)->findOneByUuid($event->getToken()->getUser()->getUuid());
-
-        if (!$authEntity) {
-            return;
-        }
-
-        $this->eventDispatcher->dispatch(new MmcAuthenticationRelativeUserAuthEvent($event->getToken(), $authEntity, $event->getRequest()), MmcAuthenticationEvents::LOGOUT_SUCCESS);
-
-        $this->em->persist($authEntity);
-        $this->em->flush();
 
         $event->setResponse(new Response(null, 204));
     }

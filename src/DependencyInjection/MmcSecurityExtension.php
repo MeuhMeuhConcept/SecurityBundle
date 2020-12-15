@@ -24,7 +24,7 @@ class MmcSecurityExtension extends Extension
         foreach ($config['logout'] as $firewall) {
             $definition->addTag('kernel.event_subscriber', [
                 'event' => 'Symfony\Component\Security\Http\Event\LogoutEvent',
-                'dispatcher' => 'security.event_dispatcher.' . $firewall,
+                'dispatcher' => 'security.event_dispatcher.'.$firewall,
             ]);
         }
     }
