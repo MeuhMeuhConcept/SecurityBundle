@@ -99,6 +99,13 @@ api_login_check:
     path: /api/login_check
 ```
 
+#### Logout
+To enable logout, add this route
+```
+api_logout:
+    path: /api/logout
+```
+
 ### If you use lexit/jwt-authentication-bundle
 Add this service in your project
 ```
@@ -156,4 +163,25 @@ class JWTCreatedListener
         $event->setData($payload);
     }
 }
+```
+
+### Doctrine configuration
+Create a `config/packages/doctrine-extensions.yaml` with this content to enable Gedmo TimestampableListener
+```
+services:
+    Gedmo\Timestampable\TimestampableListener:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+```
+
+and add that configuration to your `config/packages/doctrine.yaml`
+```
+doctrine:
+    orm:
+        dql:
+            string_functions:
+                CAST: Mmc\Security\Doctrine\DQL\Postgre\Cast
 ```
