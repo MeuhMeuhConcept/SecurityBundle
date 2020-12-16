@@ -12,5 +12,6 @@ final class ActivityType extends AbstractEnum
     const CHANGE_USERNAME = 'change_username';
     const REFRESH_TOKEN_BY_EMAIL = 'refresh_token_email';
     const TOKEN_BY_EMAIL_HAS_BEEN_VERIFIED = 'token_email_verified';
+    const CREATE_EMAIL = 'create_email';
     const CHANGE_EMAIL = 'change_email';
 }

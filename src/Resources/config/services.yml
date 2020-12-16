@@ -68,6 +68,7 @@ services:
             - { name: kernel.event_listener, event: security.mmc.authentication.change_username, method: onUsernameChange }
             - { name: kernel.event_listener, event: security.mmc.authentication.refresh_token_by_email, method: onRefreshTokenByEmail }
             - { name: kernel.event_listener, event: security.mmc.authentication.token_by_email_has_been_verified, method: onVerifyTokenByEmail }
+            - { name: kernel.event_listener, event: security.mmc.authentication.create_email, method: onEmailCreate }
             - { name: kernel.event_listener, event: security.mmc.authentication.change_email, method: onEmailChange }
 
     security.mmc.listener.authentication_session:

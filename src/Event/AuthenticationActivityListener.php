@@ -121,6 +121,21 @@ class AuthenticationActivityListener
         $this->em->persist($activity);
     }
 
+    public function onEmailCreate(MmcAuthenticationEvent $event)
+    {
+        $authEntity = $event->getAuthEntity();
+        $token = $event->getToken();
+
+        $activity = new UserAuthActivity();
+        $activity->setUserAuth($authEntity)
+            ->setSessionUuid($token->getUser()->getUsername())
+            ->setType(ActivityType::CREATE_EMAIL)
+            ->setDatas($event->getExtras())
+            ;
+
+        $this->em->persist($activity);
+    }
+
     public function onEmailChange(MmcAuthenticationEvent $event)
     {
         $authEntity = $event->getAuthEntity();
