@@ -43,6 +43,10 @@ class AuthenticationTokenByEmailCreator
             'uuid' => $uuid,
         ]);
 
+        if (!$user || !$user->isEnabled()) {
+            throw new Exception\AuthenticationTokenByEmailCreator('user_not_found');
+        }
+
         foreach ($user->getAuths() as $userAuth) {
             if (AuthType::TOKEN_BY_EMAIL == $userAuth->getType()) {
                 throw new Exception\AuthenticationTokenByEmailCreator('user_auth_already_exists');
