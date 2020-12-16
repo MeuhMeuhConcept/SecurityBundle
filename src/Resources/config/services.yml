@@ -95,6 +95,18 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@event_dispatcher'
 
+    security.mmc.service.authentication_token_by_email_creator:
+        alias: Mmc\Security\Service\AuthenticationTokenByEmailCreator
+        public: true
+
+    Mmc\Security\Service\AuthenticationTokenByEmailCreator:
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '@security.token_storage'
+            - '@validator'
+
     security.mmc.service.authentication_token_by_email_refresher:
         alias: Mmc\Security\Service\AuthenticationTokenByEmailRefresher
         public: true
